@@ -67,10 +67,26 @@ const isValidIdProduct = async (idProd) => {
 
 }
 
+// Validamos que la coleccion que venga para las imagenes sea valida
+const coleccionesPermitidas = async ( coleccion = '', colecciones = [] ) => {
+
+    const isValid = colecciones.includes(coleccion);
+
+    if( !isValid ) {
+
+        throw new Error(`Las colecciones permitidas son ${colecciones}`);
+
+    }
+
+    return true;
+
+}
+
 module.exports = {
     isValidRol,
     isEmailValid,
     isValidID,
     isValidIdCategory,
-    isValidIdProduct
+    isValidIdProduct,
+    coleccionesPermitidas
 };
