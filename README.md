@@ -1,4 +1,4 @@
-# Servidor con multiples funciones
+# Servidor con multiples funciones realizado con Node.js
 
 - Inicio de sesión con un usuario
 - Categorias
