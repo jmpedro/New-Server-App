@@ -2,12 +2,18 @@ const express = require('express');
 const cors = require('cors');
 const dbConnection = require('../database/config');
 const fileUpload = require('express-fileupload');
+const { createServer } = require('http');
+const { socketController } = require('../sockets/socketController');
 
 class Server {
 
     constructor() {
         this.app  = express();
         this.port = process.env.PORT;
+        
+        // Servidor Socket
+        this.server = createServer(this.app);
+        this.io = require('socket.io')(this.server);
 
         this.paths = {
             auth: '/api/auth',
@@ -26,6 +32,10 @@ class Server {
 
         // Rutas de mi aplicación
         this.routes();
+
+        // Sockets
+        this.sockets();
+
     }
 
     // Ejecutamos la conexion a la BD
@@ -64,8 +74,14 @@ class Server {
         this.app.use( this.paths.productos, require('../routes/productos') );
     }
 
+    sockets() {
+
+        this.io.on('connection', (socket) => socketController(socket, this.io) );
+
+    }
+
     listen() {
-        this.app.listen( this.port, () => {
+        this.server.listen( this.port, () => {
             console.log('Servidor corriendo en puerto', this.port );
         });
     }
